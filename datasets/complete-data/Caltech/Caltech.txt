@@ -1,0 +1,22 @@
+GISTFeature.csv
+====================
+	 Number     |  Purpose       |    
+======================================
+row =>   1472	    |  Data Sample   |
+col =>   512        |  GIST features |
+
+
+GISTFeature.csv
+====================
+	 Number     |  Purpose       |    
+======================================
+row =>   1472	    |  Data Sample   |
+col =>   928        |  LBP features  |
+
+
+label.csv
+====================
+	 Number     |  Purpose       |    
+======================================
+row =>   1472	    |  Data Sample   |
+col =>   1          |  Label of data | * 7 unique numbers (1-7)

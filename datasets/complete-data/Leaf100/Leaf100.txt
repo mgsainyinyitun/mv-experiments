@@ -1,0 +1,30 @@
+shape.csv
+====================
+	 Number     |  Purpose       |    
+======================================
+row =>   1600	    |  Data Sample   |
+col =>   64         |  Shape Feature (Not Sure) |
+
+
+margin.csv
+====================
+	 Number     |  Purpose       |    
+======================================
+row =>   1600	    |  Data Sample   |
+col =>   64         |  Magin Feature (Not Sure)  |
+
+
+texture.csv
+====================
+	 Number     |  Purpose       |    
+======================================
+row =>   1600	    |  Data Sample   |
+col =>   64         |  Texture Feature (Not Sure)| 
+
+
+label.csv
+====================
+	 Number     |  Purpose       |    
+======================================
+row =>   1600	    |  Data Sample   |
+col =>   1          |  Label of data | * 100 unique numbers (1-100)

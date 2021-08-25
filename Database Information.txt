@@ -10,6 +10,8 @@ Feature - reduced 10x10 and convert to 1x100 vector
 View - View 1 =  Visible images (VIS) , View 2 = Infrared Image (NIR),
 category - 150
 
+target - data =>data {1350x100}  , label= {1350x1} , 
+
 
 DATA SET 2
 -------------------
@@ -23,6 +25,8 @@ Sample - 1474
 Features - GIST, LBP
 View - View 1 = 512 dimensional GIST features , View 2 = 928 dimensional local binary patterns LBP
 category - 7
+
+
 
 
 DATA SET 3
