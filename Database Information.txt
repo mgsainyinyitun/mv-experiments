@@ -1,0 +1,46 @@
+DATA SET 1
+--------------
+BUAA-visnir face database
+description : The dataset BUAA used in this paper contains 1350
+instances of 150 categories. Each instance has visible images (VIS) and near infrared images (NIR),
+which naturally form a two-view dataset
+
+Sample -  1350
+Feature - reduced 10x10 and convert to 1x100 vector
+View - View 1 =  Visible images (VIS) , View 2 = Infrared Image (NIR),
+category - 150
+
+
+DATA SET 2
+-------------------
+Caltech7
+
+description : The Caltech7 dataset is a subset of the Caltech101 dataset, containing seven categories
+(Face, Motorbikes, Dolla-Bill, Garfield, Snoopy, Stop-Sign andWindsorchair) and 1474 instances.
+The original images of dataset Caltech7 differ in size.
+
+Sample - 1474
+Features - GIST, LBP
+View - View 1 = 512 dimensional GIST features , View 2 = 928 dimensional local binary patterns LBP
+category - 7
+
+
+DATA SET 3
+------------------
+One-hundred plant species leaves
+description :The 100Leaves dataset contains 1600 instances from 100 categories.
+Sample - 1600
+Features - shape descriptor , fine scale margin , texture histogram 
+View - shape descriptor , fine scale margin , texture histogram 
+category - 100
+
+DATA SET 4
+---------------
+Mfeat Handwritten digit
+description : This dataset contains 2000 samples. The size of
+the original images of dataset Mfeat is 891  702 pixels
+Sample - 2000
+Features - 76-D features of Fourier coefficient , 240-dimensional features of pixel avg
+View - 76-D features of Fourier coefficient , 240-dimensional features of pixel avg
+category - 10
+
