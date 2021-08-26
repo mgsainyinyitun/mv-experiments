@@ -1,0 +1,36 @@
+Data Set Information:
+This dataset consists of features of handwritten numerals (`0'--`9') extracted from a collection of Dutch utility maps. 
+200 patterns per class (for a total of 2,000 patterns) have been digitized in binary images. These digits are represented
+in terms of the following six feature sets (files):
+1. mfeat-fou: 76 Fourier coefficients of the character shapes;
+2. mfeat-fac: 216 profile correlations;
+3. mfeat-kar: 64 Karhunen-Love coefficients;
+4. mfeat-pix: 240 pixel averages in 2 x 3 windows;
+5. mfeat-zer: 47 Zernike moments;
+6. mfeat-mor: 6 morphological features.
+In each file the 2000 patterns are stored in ASCI on 2000 lines. The first 200 patterns are of class `0', followed by sets of 200 patterns for each of the classes `1' - `9'. Corresponding patterns in different feature sets (files) correspond to the same original character.
+The source image dataset is lost. Using the pixel-dataset (mfeat-pix) sampled versions of the original images may be obtained (15 x 16 pixels).
+
+
+mfeat_fou.csv
+=======================
+	Number     | 	Purpose     |
+====================================
+row => 2000	   |	Data Sample |
+col => 76	   |	dimensional features of Fourier coefficients |
+
+
+mfeat_pix.csv
+=======================
+	Number	   |	Purpose	    |
+====================================
+row => 2000	   |	Data Sample |
+col => 240	   |	dimensional features of pixel averages |
+
+
+label.csv
+=======================
+Number     |  Purpose       |    
+======================================
+row =>   2000	    |  Data Sample   |
+col =>   1          |  Label of data | * 10 unique numbers (1-10)
