@@ -6,7 +6,7 @@ row =>   1472	    |  Data Sample   |
 col =>   512        |  GIST features |
 
 
-GISTFeature.csv
+LBPFeature.csv
 ====================
 	 Number     |  Purpose       |    
 ======================================
