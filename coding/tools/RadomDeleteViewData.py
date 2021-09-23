@@ -19,10 +19,10 @@ class RandomDeleteViewData():
 
     def random_remove_data(X,percent=10,number_of_complete=0,random_state = None):
         """ 
-        X                   =      List data type of all view .e.g X = [View1,View2,View3, ...] , view => (sample x feature)
-        percent             =   percentage of data want to randomly remove
-        number_of_complete  = number of view that will not randomly remove , should not greater than number of view
-        random_state        = random state of random number 
+        X                   =  List data type of all view .e.g X = [View1,View2,View3, ...] , view => (sample x feature)
+        percent             =  percentage of data want to randomly remove
+        number_of_complete  =  number of view that will not randomly remove , should not greater than number of view
+        random_state        =  random state of random number 
         """
 
         no_of_sample = len(X[0])
@@ -39,7 +39,7 @@ class RandomDeleteViewData():
             np.random.seed(random_state)
         
         # for each view, randomly remove items
-        
+
         for V in X:
             for i in range(no_of_missing):
                 # Generate random number between 0 - sample number
