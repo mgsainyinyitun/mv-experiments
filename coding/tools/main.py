@@ -10,16 +10,17 @@ X = X.to_numpy();
 from constructW import ConstructW;
 from distances import Distances;
 from general import General;
+from randomdeleteview import RandomDeleteViewData;
+
 
 gg = General();
-
 dd = Distances();
+rm = RandomDeleteViewData();
 
-D = dd.EuDistance(X);
 
-
+Y = rm.random_remove_data( [pd.DataFrame(X)]);
 
 cw = ConstructW();
-t = gg.fint_t(X);
+Ytemp = Y[0].to_numpy();
 
-G,smpNow,dist,dump,idx,t,W= cw.SimilarityMatrix(X);
+W = cw.SimilarityMatrix(Ytemp);

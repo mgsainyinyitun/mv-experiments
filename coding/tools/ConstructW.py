@@ -9,12 +9,15 @@ class ConstructW():
         self.gen = General();
         
         
-        
     def __initialize(self,weight_mode):
         if(weight_mode=='binary'):
             self.bBinary = 1;
         else:
             self.bBinary = 0;
+            
+            
+    def IncompleteSimilarityMatrix(self):
+        pass;
         
 
         
@@ -38,7 +41,19 @@ class ConstructW():
                 
                 if i == int(np.ceil(nSmp/BlockSize)):
                     smpIdx = np.array([j for j in range((i-1)*BlockSize+1,nSmp+1)]);
+                    
                     dist = self.dist.EuDistance(X[smpIdx-1,:],X,0);
+                    
+                    # get special matrix with NaN other is zeros
+                    
+                    loc = np.isnan(dist);
+                    loc = ~loc;
+                    nan_dist = dist.copy();
+                    nan_dist[loc] = 0;
+                    
+                    # end
+                    
+                    dist = np.nan_to_num(dist,nan=1e100);
                     
                     if bSpeed:
                         nSmpNow = len(smpIdx);
@@ -90,10 +105,11 @@ class ConstructW():
                         
                 # W = max(W,W');
                 # W = self.__get_max_matrix(W, W.T,nSmp);
+                W = W+nan_dist;
                 W = np.maximum(W,W.T);
                 
                         
-        return G,nSmpNow,dist,dump,idx,t,W;
+        return W;
     
     
     def __get_max_matrix(self,X,Y,nSmp):
@@ -132,7 +148,7 @@ class ConstructW():
     
     
     def __construct_W_matrix(self,G,nSmp):
-        # create W full of np.NaN with size of nSmp x nSmp;
+        # create W full of zeros with size of nSmp x nSmp;
         # for each row
         # assign W to its specific location
         loop = G.shape[0];
@@ -142,7 +158,7 @@ class ConstructW():
         for i in range(0,loop):
             row = int(G[i,0]);
             col = int(G[i,1]);
-            W[row,col] = G[i,2]; # ERROR CHECK 
+            W[row,col] = G[i,2]; 
         return W;
                 
         
