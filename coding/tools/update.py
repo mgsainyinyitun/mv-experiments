@@ -25,20 +25,20 @@ class Update():
         
         upper = 2*(W.T)(X) + 4HF*Z # (kxm)(mxn) + (kxn)(nxn) => (kxn)
         lower = (2*W.T*(W)*HF) + mid_H + 2*HF + 2*HF*(Z.T)*Z # (kxm)(mxk)(kxn) + (kxn) + (kxn) (nxn)(nxn)
-        return upper/lower;
+        return upper/lower; # (k,n) matrix
         
     
     def update_w(self,X,H,W):
-        up = X * (H.T);
-        down = W * H * (H.T)
+        up = X * (H.T);         # (m,n)(n,k)
+        down = W * H * (H.T)    # (m,k)(k,n)(n,k)
         final = up/down
-        return final;
+        return final; # (m,k) matrix
     
     def update_z(self,H,S,Z,wo,lambdas,gamma):
         upper = (H.T)*H + lambdas * wo * S; # (nxk)(kxn) + (nxn) => (nxn)
         lower = (Z)*(H.T)*(H) + lambdas*wo*Z + gamma/2; # (nxn)(nxk)(kxn) + (nxn) => (nxn);
         final = upper / lower;
-        return final;
+        return final; # (n , n) matrix
         
     def update_s(self,w0,lambdas,beta,Z,F): 
         # Z = [Z1,Z2,...]; list of all Z in multi-view 
