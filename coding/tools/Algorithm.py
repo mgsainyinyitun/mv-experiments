@@ -4,7 +4,6 @@ from calculate_eigen import CalculateEigen;
 from sklearn.preprocessing import Normalizer;
 from update import Update;
 
-
 # Algorithm
 # ---------
 class Algorithm():
@@ -27,21 +26,19 @@ class Algorithm():
         # 		updata F by solving (e);
         # Until stop criterion is met.
         
-        ZL,S,F,w0 = self.initialize(VL, label);  # 
+        ZL,S,F,w0 = self.initialize(VL, label);  
         NV,WL,HL = self.normilize(VL,k=20);
         c = len(np.unique(label));
     
         # Input : multiview data with m view , alpha, beta, gamma, lambdas,
         for i in range(200):
             Sold = S;
-            
             # W - (m,k) 
             # H - (k,n) 
             # Z - (n,n)
-            
             for j in range(len(VL)):
-                WL[j] = np.multiply(WL[j],self.upd.update_w(VL[j], HL[j], WL[j]));
-                HL[j] = np.multiply(HL[j],self.upd.update_h(HL, HL[j], WL[j],VL[j], ZL[j],j, alpha));
+                WL[j] = np.multiply(WL[j],self.upd.update_w(NV[j], HL[j], WL[j]));
+                HL[j] = np.multiply(HL[j],self.upd.update_h(HL, HL[j], WL[j],NV[j], ZL[j],j, alpha));
                 ZL[j] = np.multiply(ZL[j],self.upd.update_z(HL[j], S, ZL[j], w0, lambdas, gamma))
                 w0[j] = self.upd.update_wo(ZL[j], S);
                 
@@ -52,8 +49,6 @@ class Algorithm():
             
             if self._ismetStopcriterion(Sold,S):
                 return F;
-                break;
-                
         return F;
                 
         
@@ -111,8 +106,6 @@ class Algorithm():
 
         return NV,WL,HL;
   
-
-
 # output : Z, S, F.
 		
 

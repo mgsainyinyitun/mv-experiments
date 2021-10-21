@@ -23,7 +23,7 @@ class Update():
         ##
         mid_H = alpha*mid_H;
         
-        upper = 2*(W.T)(X) + 4HF*Z # (kxm)(mxn) + (kxn)(nxn) => (kxn)
+        upper = 2*(W.T)(X) + 4*HF*Z # (kxm)(mxn) + (kxn)(nxn) => (kxn)
         lower = (2*W.T*(W)*HF) + mid_H + 2*HF + 2*HF*(Z.T)*Z # (kxm)(mxk)(kxn) + (kxn) + (kxn) (nxn)(nxn)
         return upper/lower; # (k,n) matrix
         
@@ -53,7 +53,7 @@ class Update():
         for i in range(n):
             # Pi = self._solve_p(Pi,F,n,i);
             Pi = self._solve_p( F, n, i);
-            S[:,i] = ( Zv(:,i) - beta*(Pi.T)/4*lambdas ) / 4*np.sum(w0);
+            S[:,i] = ( Zv[:,i] - beta*(Pi.T)/4*lambdas ) / 4*np.sum(w0);
         
         return S;
             
