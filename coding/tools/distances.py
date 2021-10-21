@@ -1,6 +1,6 @@
 import numpy as np;
 
-class Distances:
+class Distances():
     def EuDistance(self,X,Y=[],bSqrt=1):
         # if Y is empty
     

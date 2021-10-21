@@ -16,10 +16,13 @@ class ConstructW():
             self.bBinary = 0;
             
             
-    def IncompleteSimilarityMatrix(self):
-        pass;
+    def construct_complete_graph(self,X,G):
+        # L = G.TLG
+        Xcomplete = np.dot(G.T,X);
+        Xcomplete = np.dot(Xcomplete,G);
+        return Xcomplete;
         
-
+    
         
     def SimilarityMatrix(self,X,neighbour_mode='knn',weight_mode='heatkernel',k=5,b_self_connect=0,b_true_knn = 0):
         nSmp = X.shape[0];

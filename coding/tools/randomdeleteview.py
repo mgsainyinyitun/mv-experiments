@@ -6,7 +6,9 @@ class RandomDeleteViewData():
     
     def remove_nan(self,X):
         # remove all sample with include NaN
-        X = X[~np.isnan(X)];
+        # X[~np.isnan(X).any(axis=1), :]
+        
+        X = X[~np.isnan(X).any(axis=1),:];
         return X;
         
 
