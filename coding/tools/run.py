@@ -13,12 +13,14 @@ v4 = pd.read_csv('C:\\Users\\Sai Nyi\\Desktop\\pjt\\Experiments\\datasets\\compl
 v5 = pd.read_csv('C:\\Users\\Sai Nyi\\Desktop\\pjt\\Experiments\\datasets\\complete-data\\Reuters\\05FifthView.csv',header=None);
 label = pd.read_csv('C:\\Users\\Sai Nyi\\Desktop\\pjt\\Experiments\\datasets\\complete-data\\Reuters\\Label.csv',header=None);
 
-all_view = [v1.to_numpy(),v2.to_numpy(),v3.to_numpy(),v4.to_numpy(),v5.to_numpy()];
+#all_view = [v1.to_numpy(),v2.to_numpy(),v3.to_numpy(),v4.to_numpy(),v5.to_numpy()];
+
+all_view = [v1,v2,v3,v4,v5];
 
 # Randm Remove Data,
 
-# Vl = rd.random_remove_data(all_view);
-Vl = all_view;
+Vl = rd.random_remove_data(all_view);
+
 
 #  {0.0001, 0.001, 0.01, 0.1, 1, 10, 100,1000}
 # para1=[.01  1];
@@ -39,9 +41,8 @@ from sklearn.cluster import KMeans;
 from sklearn.metrics import accuracy_score;
 km = KMeans(n_clusters=len(np.unique(label)));
 
-avg = ( Sx[0] +Sx[1] + Sx[2] + Sx[3] + Sx[4]) / 5
 
-km.fit(avg);
+km.fit(Sx);
 predict = km.labels_;
 
 print(accuracy_score(label,predict))

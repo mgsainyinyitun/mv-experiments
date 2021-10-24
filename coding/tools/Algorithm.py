@@ -32,8 +32,7 @@ class Algorithm():
         # 		updata F by solving (e);
         # Until stop criterion is met.
         
-        # VLr = self.remove_to_complete_(VL);
-        VLr = VL;
+        VLr = self.remove_to_complete_(VL);
         
         ZL,GL,S,FL,w0 = self.initialize(VL,VLr, label); 
         NV,WL,HL = self.normilize(VLr,k=20);
@@ -43,45 +42,42 @@ class Algorithm():
     
         # Input : multiview data with m view , alpha, beta, gamma, lambdas,
         for i in range(10):
-            # Sold = S;
+            Sold = S;
             # W - (m,k) 
             # H - (k,n) 
             # Z - (n,n)
             DL = [];
             LL = [];
-            FL = [];
+  
             
             for j in range(len(VL)):
-                for k in range(10):
-                    print('Start updating in process;;');
-                    WL[j] = np.multiply(WL[j],self.upd.update_w(NV[j], HL[j], WL[j],ZL[j]));
-                    HL[j] = np.multiply(HL[j],self.upd.update_h(HL, HL[j], WL[j],NV[j],j, alpha));
-                    ZL[j] = np.multiply(ZL[j],self.upd.update_z(WL[j], ZL[j], gamma));
-                # w0[j] = self.upd.update_wo(FL[j], S);
+                print('Start updating in process;;');
+                WL[j] = np.multiply(WL[j],self.upd.update_w(NV[j], HL[j], WL[j],ZL[j]));
+                HL[j] = np.multiply(HL[j],self.upd.update_h(HL, HL[j], WL[j],NV[j],j, alpha));
+                ZL[j] = np.multiply(ZL[j],self.upd.update_z(WL[j], ZL[j], gamma));
+                w0[j] = self.upd.update_wo(FL[j], S);
                     #### for update F #### 
-                # print('W0 value are',w0);
-                DL.append(np.diag(sum(ZL[j])))
-                #LL.append(GL[j].T*( DL[j]-ZL[j])*GL[j]);
-                LL.append(DL[j]-ZL[j]);
+                print('W0 value are',w0);
                 
-                tempF,_,_ = self.cal_eig.calculate(LL[j],6,0);
-                FL.append(tempF);
+                DL.append(np.diag(sum(ZL[j])))
+                LL.append(GL[j].T*( DL[j]-ZL[j])*GL[j]);
+                
+                #LL.append(DL[j]-ZL[j]);
+                #tempF,_,_ = self.cal_eig.calculate(LL[j],6,0);
+                #FL.append(tempF);
                     
                     #max_E , avg_E = self.find_error(NV[j],WL[j],HL[j]);
                     #return WL[i],HL[i],NV[i],w0,ZL[i];
                 
             # for update F;
-            
-            
-            return FL; # return list of all eigen vector
-            #FL = self.upd.solve_f(LL);
+            FL = self.upd.solve_f(LL);
     
             ###
             
-            # S = self.upd.update_s(w0, lambdas, beta, FL );
+            S = self.upd.update_s(w0, lambdas, beta, FL );
             
-            # if self._ismetStopcriterion(Sold,S):
-            #     return S;
+            if self._ismetStopcriterion(Sold,S):
+                return S;
         return S;
     
     def remove_to_complete_(self,VL):
@@ -90,8 +86,6 @@ class Algorithm():
             temp = self.rm.remove_nan(VL[i]);
             VLr.append(temp);
         return VLr;
-            
-                
         
     def _ismetStopcriterion(self,Sold,Snew):
         #if ii>5 &( (norm(Z-Zold,'fro')/norm(Zold,'fro') )<1e-3)
