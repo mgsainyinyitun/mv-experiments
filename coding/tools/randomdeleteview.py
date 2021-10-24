@@ -41,7 +41,7 @@ class RandomDeleteViewData():
         # if number_of_complete greater than 0 => don't randomly  remove some views
 
         if number_of_complete>0:
-            X_final,X = _separate_views(X,number_of_complete)
+            X_final,X = self._separate_views(X,number_of_complete)
         
         if(random_state):
             np.random.seed(random_state)
@@ -55,7 +55,7 @@ class RandomDeleteViewData():
                 col_number = len(V.iloc[0])
                 to_remove = np.random.randint(0,no_of_sample)
                 Vtemp.iloc[to_remove] = [np.NaN for i in range(col_number)]
-            X_final.append(Vtemp) # copy of V 
+            X_final.append(Vtemp.to_numpy()) # copy of V 
         return X_final
 
 

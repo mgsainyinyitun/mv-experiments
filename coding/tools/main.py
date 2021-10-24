@@ -17,7 +17,7 @@ gg = General();
 dd = Distances();
 rm = RandomDeleteViewData();
 
-Y = rm.random_remove_data( [pd.DataFrame(X)]);
+Y = rm.random_remove_data( [pd.DataFrame(X),pd.DataFrame(X),pd.DataFrame(X)]);
 
 cw = ConstructW();
 Ytemp = Y[0].to_numpy();
