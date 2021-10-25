@@ -40,6 +40,11 @@ class Update():
         upper = np.dot(W,W.T);
         lower = np.dot(np.dot(Z,W),W.T) + gamma/2;
         return upper/lower; # (n , n) matrix
+    
+    def update_zf(self,W,gamma):
+        I = np.eye(W.shape[0]);
+        part = np.linalg.inv(np.dot(W,W.T));
+        return I - (gamma/2)*part;
         
     # def update_s(self,w0,lambdas,beta,Z,F): 
     #     # Z = [Z1,Z2,...]; list of all Z in multi-view 

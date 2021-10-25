@@ -34,8 +34,11 @@ class Algorithm():
                 
                 WL[j] = WL[j] * self.upd.update_w(NVL[j], HL[j], WL[j]);
                 HL[j] = HL[j] * self.upd.update_h(HL,HL[j], WL[j], NVL[j], ZL[j], j, alpha);
-                ZL[j] = ZL[j] * self.upd.update_z(ZL[j], WL[j], gamma);
+                # ZL[j] = ZL[j] * self.upd.update_z(ZL[j], WL[j], gamma);
                 
+                ZL[j] =  self.upd.update_zf(WL[j], gamma);
+                
+                # print('Upper Norm:',mu.norm_fro_err(NVL[j], WL[j], HL[j], normX));
                 # print('Norm X :',normX);
                 # rel_error = mu.norm_fro_err(A, W, H, norm_A) / norm_A
                 rel_error = mu.norm_fro_err(NVL[j], WL[j], HL[j], normX) / normX;
@@ -43,7 +46,7 @@ class Algorithm():
                 
             LL.append(self.calculate_laplacian(ZL[j]));
             value,vector = np.linalg.eig(LL[j]);
-            eigValue.append(value);
+            eigValue.append(value );
             eigVector.append(vector);
             
             # x = zip(x, range(len(x)))
