@@ -22,11 +22,11 @@ beta = [0.001]
 gamma = [1.0]
 lambdas = [0.1]
 
-Wl,Hl,Zl,Ll,eigVal,eigVec,Fl = al.implement(Vl, label, alpha[0], beta[0], gamma[0], lambdas[0]);
+Wl,Hl,Zl,Ll,eigVal,eigVec,avgG,F,seed = al.implement(Vl, label, alpha[0], beta[0], gamma[0], lambdas[0]);
 
 ### average eigen
 
-avg = (Fl[0] + Fl[1]) /2;
+# avg = (Fl[0] + Fl[1]) /2;
 
 from sklearn.cluster import KMeans;
 from sklearn.metrics import accuracy_score;
@@ -35,7 +35,7 @@ from sklearn.metrics import v_measure_score;
 
 c = len(np.unique(label));
 km = KMeans(n_clusters=c);
-km.fit(np.real(avg));
+km.fit(np.real(F));
 
 pred = km.labels_+1;
 
