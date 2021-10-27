@@ -17,12 +17,14 @@ Vl = [v1.to_numpy(),v2.to_numpy()];
 
 al = Algorithm();
 
-alpha = [0.001,0.1,1];
-beta = [0.001]
-gamma = [1.0]
-lambdas = [0.1]
+# 100,1000,2000
 
-Wl,Hl,Zl,Ll,eigVal,eigVec,avgG,F,seed = al.implement(Vl, label, alpha[0], beta[0], gamma[0], lambdas[0]);
+alpha = [0.001,0.1,1];
+beta = [0.01]
+gamma = [0.1]
+lambdas = [100,1000,2000];
+
+Wl,Hl,Zl,w0,S,F= al.implement(Vl, label, alpha[0], beta[0], gamma[0], lambdas[0]);
 
 ### average eigen
 
@@ -34,8 +36,8 @@ from sklearn.metrics import normalized_mutual_info_score;
 from sklearn.metrics import v_measure_score;
 
 c = len(np.unique(label));
-km = KMeans(n_clusters=c);
-km.fit(np.real(F));
+km = KMeans(n_clusters=c); # random center point 
+km.fit(F);
 
 pred = km.labels_+1;
 
