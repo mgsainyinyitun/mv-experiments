@@ -13,6 +13,72 @@ class Algorithm():
         self.upd = Update();
         self.gen = General();
         
+    
+    def implement_complete(self,VL,label,gamma,beta,lambdas):
+        
+        NVL = self.normilize(VL);
+        ZL,WL,HL,w0,S,F = self.initialize_complete(NVL,k=7);
+        # Zold = [];
+        # c = len(np.unique(label));
+        
+        for i in range(len(NVL)):
+            rel_error = 10;
+            normX = mu.norm_fro(NVL[i]);
+            j = 0;
+            while(rel_error > 0.35):
+                # Zold.append(ZL[i].copy());
+                j = j+1;
+                WL[i] = WL[i] * self.upd.update_w(NVL[i], HL[i], WL[i]);
+                HL[i] = HL[i] * self.upd.update_h(NVL[i], WL[i], HL[i], ZL[i]);
+                #ZL[i] = ZL[i] * self.upd.update_z(HL[i], ZL[i], gamma);
+                
+                ZL[i]  = self.upd.update_zf(HL[i], gamma);
+                ZL[i][ZL[i]<0] = 0;
+                ZL[i] = (ZL[i] + ZL[i].T)/2;
+                
+                rel_error = mu.norm_fro_err(NVL[i], WL[i], HL[i], normX) / normX;
+                print('iter:',j," Error is:",rel_error);
+                
+                
+        count = 0;
+        ratio = 1e3;
+        while ratio > 1e-3 and count<5: # 0.001
+            #   Z(find(Z<0))=0; % Z less than 0
+            # print('Value of count',count);
+            count = count +1;
+            S[S<0] = 0;
+            S = (S+S.T)/2;
+            S_old = S.copy();
+            
+            for i in range(len(ZL)):
+                w0[i] = self.upd.update_w0(ZL[i], S);
+                
+            # print(w0);
+
+            F = self.upd.solve_f(S, 500);
+            # update S;
+            S = self.upd.update_s(w0, lambdas, beta, ZL, F, S);
+            ratio = self.calculate_ratio_of_s(S_old, S);
+            print('iter:',count,' Ratio:',ratio);
+                
+        # NZL = self.normilize(ZL);
+        
+        # Graph Fusion
+        
+        avgZ = 0;
+        # avgZ = self.avg_graph(ZL);
+        # F = self.upd.solve_f(avgZ, 500);
+                
+        return WL,HL,ZL,avgZ,F;
+        
+    def avg_graph(self,ZL):
+        Ztemp = np.zeros_like(ZL[0]);
+        for i in range(len(ZL)):
+            Ztemp = Ztemp + ZL[i];
+        Ztemp = Ztemp/len(ZL);
+        return Ztemp;
+        
+        
     def implement(self,VicL,VcL,label,alpha,beta,gamma,lambdas):
         
         ZL,WL,HL,GL,w0,F,S = self.initialize(VicL,VcL,k=20);  
@@ -93,6 +159,29 @@ class Algorithm():
         sqrtDegreeM = np.diag(1.0/(degreeM**(0.5)));
         return np.dot(np.dot(sqrtDegreeM,laplacianM),sqrtDegreeM);
         
+    
+    def initialize_complete(self,VL,k=20):
+        ZL = [];
+        WL = [];
+        HL = [];
+        for i in range(len(VL)):
+            Ztemp = self.cw.SimilarityMatrix(VL[i].T);
+            Wtemp = np.random.rand(VL[i].shape[0],k);
+        
+            Htemp = np.random.rand(k,VL[i].shape[1]);
+            # Htemp[Htemp>0.6] = 1;
+            # Htemp[Htemp<=0.6] = 0;
+            
+            ZL.append(Ztemp.copy());
+            WL.append(Wtemp.copy());
+            HL.append(Htemp.copy());
+            
+            w0 = np.ones(len(VL))/len(VL);
+            
+            S = np.eye(VL[0].shape[1]);
+            F = self.upd.solve_f(S, 500);
+        return ZL,WL,HL,w0,S,F;
+    
     
     def initialize(self,VicL,VcL,k=20):
         ZL = [];

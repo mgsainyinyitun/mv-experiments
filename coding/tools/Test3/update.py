@@ -11,30 +11,30 @@ class Update():
     
     # def __init__(self):
     #     self.cal_eig = CalculateEigen();
+    
+    # *** input X => ( m x n )  => m = feature, n = number of sample    
+    
+    def update_h(self,X,W,H,Z):
+        numerator = np.dot(W.T,X) + np.dot(H,Z) + np.dot(H,Z.T);
+        denominator = np.dot( np.dot(W.T,W), H ) + H + np.dot( np.dot(H,Z),Z.T);
+        return numerator/denominator; # (k,n) matrix
         
     
-    def update_h(self,HL,H,W,X,Z,view_no,alpha):
-        upper = 2*(np.dot(W.T,X));   #   2*(W.T)(X) + 4*HF*Z # (kxm)(mxn) + (kxn)(nxn) => (kxn) 
-        lower = 2*( np.dot( np.dot(W.T,W) ,H) );
-        return upper/lower; # (k,n) matrix
-        
+    def update_w(self,X,H,W):
+        numerator = np.dot(X,H.T);
+        denominator = np.dot ( np.dot(W,H) ,H.T );
+        return numerator/denominator # (m,k) matrix
     
-    def update_w(self,X,H,W,Z):
-        # 2 *X * (H.T);         # (m,n)(n,k)
-        up = 2*(np.dot(X,H.T)) + 4*(np.dot( Z.T,W));
-        # W * H * (H.T)    # (m,k)(k,n)(n,k)    # 2*Z*Z.T*W;
-        down = np.dot(np.dot(W,H),H.T) + 2*W + 2*( np.dot(  np.dot(Z,Z.T) , W ) );
-        return up/down; # (m,k) matrix
+    def update_z(self,H,Z,gamma):
+        numerator = np.dot(H.T,H);
+        denominator = np.dot( np.dot(H.T,H),Z) ;
+        return numerator/denominator;  # (n,n) matrix
     
-    def update_z(self,Z,W,gamma):
-        upper = np.dot(W,W.T);
-        lower = np.dot(np.dot(Z,W),W.T) + gamma/2;
-        return upper/lower; # (n , n) matrix
-    
-    def update_zf(self,W,gamma):
-        I = np.eye(W.shape[0]);
-        part = np.linalg.inv(np.dot(W,W.T));
-        return I - (gamma/2)*part;
+    def update_zf(self,H,gamma):
+        I = np.eye(H.shape[1]);
+        to_inv = (np.dot(H.T,H) + gamma*I);
+        inv = np.linalg.inv(to_inv);
+        return np.dot(inv,np.dot(H.T,H));
         
     def update_s(self,w0,lambdas,beta,ZL,F,S): 
         # Z = [Z1,Z2,...]; list of all Z in multi-view 
@@ -43,8 +43,8 @@ class Update():
         
         for i in range(n):
             # Pi = self._solve_p(Pi,F,n,i);
-            Pi = self._solve_pi( F, n, i);
-            S[:,i] = ( Zv[i,:] - (beta*(Pi.T))/(4*lambdas) ) / (4*np.sum(w0));
+            Pi = self._solve_pi( F, n, i); # Here
+            S[i,:] = ( Zv[i,:] - (beta*(Pi.T))/(4*lambdas) ) / (4*np.sum(w0)); # here
         
         return S;
             
@@ -62,15 +62,17 @@ class Update():
     # first version
     def solve_f(self,X,c):
         # L = self.calculate_normalized_laplacian(X);
+        
         D = np.sum(X,axis=0);
         D = np.diag(D);
         L = D-X;
+        
+        # H = np.vstack([V[:,i] for (v, i) in x[:500]]).T
         
         eigVal, eigVec = np.linalg.eig(L);
         eigVal = zip(eigVal,range(len(eigVal)));
         eigVal = sorted(eigVal,key=lambda eigVal:eigVal[0]);
         F = np.vstack([eigVec[:,i] for (v,i) in eigVal[:c]]).T;
-        print('value of F:',F.shape);
         return F;
 
     # def solve_f(self,X,c):
