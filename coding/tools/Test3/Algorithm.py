@@ -15,9 +15,10 @@ class Algorithm():
         
     
     def implement_complete(self,VL,label,gamma,beta,lambdas):
+        c = len(np.unique(label));
         
         NVL = self.normilize(VL);
-        ZL,WL,HL,w0,S,F = self.initialize_complete(NVL,k=7);
+        ZL,WL,HL,w0,S,F = self.initialize_complete(NVL,k=100);
         # Zold = [];
         # c = len(np.unique(label));
         
@@ -25,19 +26,22 @@ class Algorithm():
             rel_error = 10;
             normX = mu.norm_fro(NVL[i]);
             j = 0;
-            while(rel_error > 0.35):
-                # Zold.append(ZL[i].copy());
-                j = j+1;
-                WL[i] = WL[i] * self.upd.update_w(NVL[i], HL[i], WL[i]);
-                HL[i] = HL[i] * self.upd.update_h(NVL[i], WL[i], HL[i], ZL[i]);
-                #ZL[i] = ZL[i] * self.upd.update_z(HL[i], ZL[i], gamma);
+            
+            # while(rel_error > 0.4 and j<100):
+            #     # Zold.append(ZL[i].copy());
+            #     j = j+1;
+            #     WL[i] = WL[i] * self.upd.update_w(NVL[i], HL[i], WL[i]);
+            #     HL[i] = HL[i] * self.upd.update_h(NVL[i], WL[i], HL[i], ZL[i]);
                 
-                ZL[i]  = self.upd.update_zf(HL[i], gamma);
-                ZL[i][ZL[i]<0] = 0;
-                ZL[i] = (ZL[i] + ZL[i].T)/2;
+            #     # ZL[i] = ZL[i] * self.upd.update_z(HL[i], ZL[i], gamma);
+            #     # ZL[i] = self.upd.update_zf(HL[i], gamma);
                 
-                rel_error = mu.norm_fro_err(NVL[i], WL[i], HL[i], normX) / normX;
-                print('iter:',j," Error is:",rel_error);
+            #     ZL[i]  = self.upd.update_zf(HL[i], gamma);
+            #     ZL[i][ZL[i]<0] = 0;
+            #     ZL[i] = (ZL[i] + ZL[i].T)/2;
+                
+            #     rel_error = mu.norm_fro_err(NVL[i], WL[i], HL[i], normX) / normX;
+            #     print('iter:',j," Error is:",rel_error);
                 
                 
         count = 0;
@@ -49,6 +53,15 @@ class Algorithm():
             S[S<0] = 0;
             S = (S+S.T)/2;
             S_old = S.copy();
+            
+            
+            #Test
+            WL[i] = WL[i] * self.upd.update_w(NVL[i], HL[i], WL[i]);
+            HL[i] = HL[i] * self.upd.update_h(NVL[i], WL[i], HL[i], ZL[i]);
+            ZL[i]  = self.upd.update_zf(HL[i], gamma);
+            
+            
+            
             
             for i in range(len(ZL)):
                 w0[i] = self.upd.update_w0(ZL[i], S);

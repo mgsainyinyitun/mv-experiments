@@ -6,9 +6,22 @@ from randomdeleteview import RandomDeleteViewData;
 
 init = "C:\\Users\\Sai Nyi\\Desktop\\pjt\\Experiments\\datasets\\complete-data";
 
-v1 = pd.read_csv(init+"\\Caltech\\GISTFeature.csv",header=None);
-v2 = pd.read_csv(init+"\\Caltech\\LBPFeature.csv",header=None);
-label = pd.read_csv(init+"\\Caltech\\label.csv",header=None);
+# Caltech
+# v1 = pd.read_csv(init+"\\Caltech\\GISTFeature.csv",header=None);
+# v2 = pd.read_csv(init+"\\Caltech\\LBPFeature.csv",header=None);
+
+# Mfeat
+v1 = pd.read_csv(init+"\\Mfeat\\mfeat_fou.csv",header=None);
+v2 = pd.read_csv(init+"\\Mfeat\\mfeat_pix.csv",header=None);
+v1 = v1.drop(columns=76);
+v1 = v1.drop(0);
+v2 = v2.drop(0);
+
+
+
+# label = pd.read_csv(init+"\\Caltech\\label.csv",header=None); # Caltech Label
+label = pd.read_csv(init+"\\Mfeat\\label.csv",header=None); # Mfeat Label
+
 label = label.to_numpy();
 
 Vl = [v1.to_numpy().T,v2.to_numpy().T];
@@ -20,9 +33,9 @@ al = Algorithm();
 # k # c # 
 # alpha = [0.001,0.1,1];
 
-gamma = [0.00001,0.0001,0.001]
-beta = [0.01]
-lambdas = [100,1000,2000];
+gamma = [0.00001,]#0.0001]
+beta = [0.01]#,0.1]
+lambdas = [100]#,1000,2000];
 
 F_list = [];
 
@@ -62,9 +75,6 @@ for m in range(len(F_list)):
     
     print('Average Accuracy:',np.mean(acc));
     print('Standard Deviation:',np.std(acc));
-
-
-
 
 
 

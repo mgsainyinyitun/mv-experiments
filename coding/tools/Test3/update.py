@@ -35,6 +35,12 @@ class Update():
         to_inv = (np.dot(H.T,H) + gamma*I);
         inv = np.linalg.inv(to_inv);
         return np.dot(inv,np.dot(H.T,H));
+    
+    def update_zm(self,H,gamma):
+        I = np.eye(H.shape[1]);
+        to_inv =  np.dot(H.T,H);
+        inv = np.linalg.inv(to_inv);
+        return np.dot(inv, (np.dot(H.T,H)-gamma));
         
     def update_s(self,w0,lambdas,beta,ZL,F,S): 
         # Z = [Z1,Z2,...]; list of all Z in multi-view 
@@ -44,7 +50,7 @@ class Update():
         for i in range(n):
             # Pi = self._solve_p(Pi,F,n,i);
             Pi = self._solve_pi( F, n, i); # Here
-            S[i,:] = ( Zv[i,:] - (beta*(Pi.T))/(4*lambdas) ) / (4*np.sum(w0)); # here
+            S[:,i] = ( Zv[:,i] - (beta*(Pi.T))/(4*lambdas) ) / (4*np.sum(w0)); # here
         
         return S;
             
