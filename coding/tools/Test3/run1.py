@@ -11,20 +11,45 @@ init = "C:\\Users\\Sai Nyi\\Desktop\\pjt\\Experiments\\datasets\\complete-data";
 # v2 = pd.read_csv(init+"\\Caltech\\LBPFeature.csv",header=None);
 
 # Mfeat
-v1 = pd.read_csv(init+"\\Mfeat\\mfeat_fou.csv",header=None);
-v2 = pd.read_csv(init+"\\Mfeat\\mfeat_pix.csv",header=None);
-v1 = v1.drop(columns=76);
-v1 = v1.drop(0);
-v2 = v2.drop(0);
+# v1 = pd.read_csv(init+"\\Mfeat\\mfeat_fou.csv",header=None);
+# v2 = pd.read_csv(init+"\\Mfeat\\mfeat_pix.csv",header=None);
+# v1 = v1.drop(columns=76);
+# v1 = v1.drop(0);
 
+# v2 = v2.drop(0);
+# v2 = v2.drop(columns=240);
 
+# Reuter
+v1 = pd.read_csv(init+"\\Reuters\\01FirstView.csv",header=None);
+v2 = pd.read_csv(init+'\\Reuters\\02SecondView.csv',header=None);
+v3 = pd.read_csv(init+"\\Reuters\\03ThirdView.csv",header=None);
+v4 = pd.read_csv(init+"\\Reuters\\05FifthView.csv",header=None);
+v5 = pd.read_csv(init+"\\Reuters\\05FifthView.csv",header=None);
+
+# 100Leaf
+# v1 = pd.read_csv(init+"\\Leaf100\\margin.csv",header=None);
+# v2 = pd.read_csv(init+"\\Leaf100\\shape.csv",header=None);
+# v2 = pd.read_csv(init+"\\Leaf100\\texture.csv",header=None);
+
+# ORL
+# v1 = pd.read_csv(init+"\\ORL\\01FirstView.csv",header=None);
+# v2 = pd.read_csv(init+"\\ORL\\02SecondView.csv",header=None);
+# v3 = pd.read_csv(init+"\\ORL\\03ThridView.csv",header=None);
+# v4 = pd.read_csv(init+"\\ORL\\04FourthView.csv",header=None);
 
 # label = pd.read_csv(init+"\\Caltech\\label.csv",header=None); # Caltech Label
-label = pd.read_csv(init+"\\Mfeat\\label.csv",header=None); # Mfeat Label
+
+# label = pd.read_csv(init+"\\Mfeat\\label.csv",header=None); # Mfeat Label
+
+label = pd.read_csv(init+'\\Reuters\\Label.csv',header=None) # Reuter
+
+# label = pd.read_csv(init+"\\Leaf100\\label.csv",header=None); # 100 leaf
+
+# label = pd.read_csv(init+"\\ORL\\Label.csv",header=None); # ORL
 
 label = label.to_numpy();
 
-Vl = [v1.to_numpy().T,v2.to_numpy().T];
+Vl = [  v1.to_numpy().T, v2.to_numpy().T, v3.to_numpy().T,v4.to_numpy().T,v5.to_numpy().T ];
 
 
 al = Algorithm();
@@ -66,11 +91,11 @@ c = len(np.unique(label));
 for m in range(len(F_list)):
     acc = [];
     for i in range(10):
-        km = KMeans(n_clusters=c); # random center point 
+        km = KMeans(n_clusters=c,n_init=100); # random center point 
         km.fit(np.real(F_list[m]));
         pred = km.labels_+1;
         acc.append(accuracy_score(label, pred));
-        # print('accuracy score:', accuracy_score(label, pred));
+        print('accuracy score:', accuracy_score(label, pred));
         
     
     print('Average Accuracy:',np.mean(acc));

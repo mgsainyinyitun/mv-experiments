@@ -17,8 +17,9 @@ class Algorithm():
     def implement_complete(self,VL,label,gamma,beta,lambdas):
         c = len(np.unique(label));
         
-        NVL = self.normilize(VL);
-        ZL,WL,HL,w0,S,F = self.initialize_complete(NVL,k=100);
+        #NVL = self.normilize(VL);
+        NVL = VL;
+        ZL,WL,HL,w0,S,F = self.initialize_complete(NVL,k=c);
         # Zold = [];
         # c = len(np.unique(label));
         
@@ -27,60 +28,61 @@ class Algorithm():
             normX = mu.norm_fro(NVL[i]);
             j = 0;
             
-            # while(rel_error > 0.4 and j<100):
-            #     # Zold.append(ZL[i].copy());
-            #     j = j+1;
-            #     WL[i] = WL[i] * self.upd.update_w(NVL[i], HL[i], WL[i]);
-            #     HL[i] = HL[i] * self.upd.update_h(NVL[i], WL[i], HL[i], ZL[i]);
+            while(rel_error > 0.3 and j<2500):
+                # Zold.append(ZL[i].copy());
+                j = j+1;
+                WL[i] = WL[i] * self.upd.update_w(NVL[i], HL[i], WL[i]);
+                # WL[i] = self.upd.update_wh(NVL[i], HL[i]);
                 
-            #     # ZL[i] = ZL[i] * self.upd.update_z(HL[i], ZL[i], gamma);
-            #     # ZL[i] = self.upd.update_zf(HL[i], gamma);
+                # HL[i] = self.upd.update_hf(WL[i], ZL[i]);
                 
-            #     ZL[i]  = self.upd.update_zf(HL[i], gamma);
-            #     ZL[i][ZL[i]<0] = 0;
-            #     ZL[i] = (ZL[i] + ZL[i].T)/2;
+                # HL[i] = HL[i] * self.upd.update_h(NVL[i], WL[i], HL[i], ZL[i]);
                 
-            #     rel_error = mu.norm_fro_err(NVL[i], WL[i], HL[i], normX) / normX;
-            #     print('iter:',j," Error is:",rel_error);
+                HL[i] = HL[i] * self.upd.update_hn(NVL[i], WL[i], HL[i]);
+                
+                # ZL[i] = ZL[i] * self.upd.update_z(HL[i], ZL[i], gamma);
+                # ZL[i] = self.upd.update_zf(HL[i], gamma);
+                
+                ZL[i]  = self.upd.update_zf(HL[i], gamma);
+                ZL[i][ZL[i]<0] = 0;
+                ZL[i] = (ZL[i] + ZL[i].T)/2;
+                
+                rel_error = mu.norm_fro_err(NVL[i], WL[i], HL[i], normX) / normX;
+                print('iter:',j," Error is:",rel_error);
                 
                 
-        count = 0;
-        ratio = 1e3;
-        while ratio > 1e-3 and count<5: # 0.001
-            #   Z(find(Z<0))=0; % Z less than 0
-            # print('Value of count',count);
-            count = count +1;
-            S[S<0] = 0;
-            S = (S+S.T)/2;
-            S_old = S.copy();
+        # count = 0;
+        # ratio = 1e3;
+        # while ratio > 1e-3 and count<5: # 0.001
+        #     #   Z(find(Z<0))=0; % Z less than 0
+        #     # print('Value of count',count);
+        #     count = count +1;
+        #     S[S<0] = 0;
+        #     S = (S+S.T)/2;
+        #     S_old = S.copy();
             
             
-            #Test
-            WL[i] = WL[i] * self.upd.update_w(NVL[i], HL[i], WL[i]);
-            HL[i] = HL[i] * self.upd.update_h(NVL[i], WL[i], HL[i], ZL[i]);
-            ZL[i]  = self.upd.update_zf(HL[i], gamma);
-            
-            
-            
-            
-            for i in range(len(ZL)):
-                w0[i] = self.upd.update_w0(ZL[i], S);
+        #     for i in range(len(ZL)):
+        #         w0[i] = self.upd.update_w0(ZL[i], S);
                 
-            # print(w0);
+        #     # print(w0);
 
-            F = self.upd.solve_f(S, 500);
-            # update S;
-            S = self.upd.update_s(w0, lambdas, beta, ZL, F, S);
-            ratio = self.calculate_ratio_of_s(S_old, S);
-            print('iter:',count,' Ratio:',ratio);
+        #     F = self.upd.solve_f(S, c);
+        #     # update S;
+        #     S = self.upd.update_s(w0, lambdas, beta, ZL, F, S);
+        #     ratio = self.calculate_ratio_of_s(S_old, S);
+        #     print('iter:',count,' Ratio:',ratio);
                 
         # NZL = self.normilize(ZL);
         
         # Graph Fusion
         
         avgZ = 0;
-        # avgZ = self.avg_graph(ZL);
-        # F = self.upd.solve_f(avgZ, 500);
+        avgZ = self.avg_graph(ZL);
+        F = self.upd.solve_f(avgZ, c);
+        
+        F = self.transformer.transform(F);
+        # F = self.upd.solve_fm(avgZ, c);
                 
         return WL,HL,ZL,avgZ,F;
         

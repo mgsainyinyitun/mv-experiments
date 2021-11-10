@@ -1,0 +1,42 @@
+
+
+01FirstView.csv
+=======================
+	Number     | 	Purpose     |
+====================================
+row => 400	   |	Data Sample |
+col => 256	   |	dimensional features|
+
+
+02SecondView.csv
+=======================
+	Number     | 	Purpose     |
+====================================
+row => 400	   |	Data Sample |
+col => 256	   |	dimensional features|
+
+
+03ThirdView.csv
+=======================
+	Number     | 	Purpose     |
+====================================
+row => 400	   |	Data Sample |
+col => 256	   |	dimensional features|
+
+
+04FouthView.csv
+=======================
+	Number     | 	Purpose     |
+====================================
+row => 400	   |	Data Sample |
+col => 256	   |	dimensional features|
+
+
+
+
+label.csv
+=======================
+Number     |  Purpose       |    
+======================================
+row =>   400	    |  Data Sample   |
+col =>   1          |  Label of data |

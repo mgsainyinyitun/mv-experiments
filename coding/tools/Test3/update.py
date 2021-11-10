@@ -18,7 +18,25 @@ class Update():
         numerator = np.dot(W.T,X) + np.dot(H,Z) + np.dot(H,Z.T);
         denominator = np.dot( np.dot(W.T,W), H ) + H + np.dot( np.dot(H,Z),Z.T);
         return numerator/denominator; # (k,n) matrix
-        
+    
+    def update_hn(self,X,W,H):
+        numerator = np.dot(W.T,X);
+        denominator = np.dot(  np.dot(W.T,W) , H);
+        return numerator/denominator;
+    
+    def update_hf(self,W,Z):
+        print('size of W:',W.shape);
+        print('size of Z:',Z.shape);
+        a = np.dot(W,W.T);
+        b = np.dot(W,W.T) + 1 -2*Z + np.dot(Z,Z.T);
+        b = np.linalg.inv(b);
+        return np.dot(a,b);
+    
+    def update_wh(self,X,H):
+        a =  np.linalg.inv( np.dot(H,H.T));
+        b = np.dot(X,H.T);
+        return np.dot(b,a);
+
     
     def update_w(self,X,H,W):
         numerator = np.dot(X,H.T);
@@ -78,12 +96,35 @@ class Update():
         eigVal, eigVec = np.linalg.eig(L);
         eigVal = zip(eigVal,range(len(eigVal)));
         eigVal = sorted(eigVal,key=lambda eigVal:eigVal[0]);
-        F = np.vstack([eigVec[:,i] for (v,i) in eigVal[:c]]).T;
+        F = np.vstack([eigVec[i,:] for (v,i) in eigVal[:c]]).T;
         return F;
 
     # def solve_f(self,X,c):
     #     D = np.sum(X,axis=0);
     #     D = np.diag(D);
+        
+
+    def solve_fm(self,X,c):
+        
+        # D   = diag(sum(Z,2));
+        #     D2 = diag(1./sqrt(diag(D)+eps));
+        # L   = D2 - Z;
+        # Lnor = D2*L*D2; # dot product
+        # Lnor = (Lnor + Lnor')/2;
+        # [V, val] = eigs(Lnor, k, 'sa', options);
+        
+        D = np.diag(np.sum(X,axis=1));
+        D2 = np.diag(1/np.sqrt(   np.diag(D)  ));
+        L = D2 - X;
+        Lnor = np.dot( np.dot(D2,L) , D2 );
+        Lnor = (Lnor + Lnor.T)/2;
+        
+        print('shape of D2:',D2.shape);
+        print('shape of Lnor:',Lnor.shape);
+        
+        eigVal, eigVec = np.linalg.eig(Lnor);
+        return eigVec;
+        
         
         
     def _solve_pi(self,F,n,i):
