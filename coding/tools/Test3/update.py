@@ -19,11 +19,19 @@ class Update():
         denominator = np.dot( np.dot(W.T,W), H ) + H + np.dot( np.dot(H,Z),Z.T);
         return numerator/denominator; # (k,n) matrix
     
+    
+    def update_hh(self,X,W,H,Z):
+        numerator = np.dot(W.T,X) + np.dot(H,Z) + np.dot(H,Z.T);
+        denominator = np.dot( np.dot(W.T,W), H ) + H + np.dot( np.dot(H,Z),Z.T);
+        return np.sqrt(numerator/denominator);
+        
+    
+    
     def update_hn(self,X,W,H):
         numerator = np.dot(W.T,X);
         denominator = np.dot(  np.dot(W.T,W) , H);
         return numerator/denominator;
-    
+
     def update_hf(self,W,Z):
         print('size of W:',W.shape);
         print('size of Z:',Z.shape);
@@ -42,6 +50,14 @@ class Update():
         numerator = np.dot(X,H.T);
         denominator = np.dot ( np.dot(W,H) ,H.T );
         return numerator/denominator # (m,k) matrix
+    
+    
+    def update_ww(self,X,H,W):
+        numerator = np.dot(X,H.T);
+        denominator = np.dot ( np.dot(W,H) ,H.T );
+        return np.sqrt(numerator/denominator);
+    
+    
     
     def update_z(self,H,Z,gamma):
         numerator = np.dot(H.T,H);

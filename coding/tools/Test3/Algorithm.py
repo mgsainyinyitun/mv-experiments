@@ -28,22 +28,28 @@ class Algorithm():
             normX = mu.norm_fro(NVL[i]);
             j = 0;
             
-            while(rel_error > 0.3 and j<2500):
+            while(rel_error > 0.35 and j<150):
                 # Zold.append(ZL[i].copy());
                 j = j+1;
-                WL[i] = WL[i] * self.upd.update_w(NVL[i], HL[i], WL[i]);
+                # WL[i] = WL[i] * self.upd.update_w(NVL[i], HL[i], WL[i]);
+                
+                WL[i] = WL[i] * self.upd.update_ww(NVL[i], HL[i], WL[i]);
                 # WL[i] = self.upd.update_wh(NVL[i], HL[i]);
                 
                 # HL[i] = self.upd.update_hf(WL[i], ZL[i]);
                 
                 # HL[i] = HL[i] * self.upd.update_h(NVL[i], WL[i], HL[i], ZL[i]);
                 
-                HL[i] = HL[i] * self.upd.update_hn(NVL[i], WL[i], HL[i]);
+                # HL[i] = HL[i] * self.upd.update_hn(NVL[i], WL[i], HL[i]);
                 
-                # ZL[i] = ZL[i] * self.upd.update_z(HL[i], ZL[i], gamma);
+                HL[i] = HL[i] * self.upd.update_hh(NVL[i], WL[i], HL[i], ZL[i]);
+                
+                ZL[i] = ZL[i] * self.upd.update_z(HL[i], ZL[i], gamma);
                 # ZL[i] = self.upd.update_zf(HL[i], gamma);
                 
-                ZL[i]  = self.upd.update_zf(HL[i], gamma);
+                # WL[i],HL[i] = self.normalize_wh(WL[i], HL[i]);
+                
+                # ZL[i]  = self.upd.update_zf(HL[i], gamma);
                 ZL[i][ZL[i]<0] = 0;
                 ZL[i] = (ZL[i] + ZL[i].T)/2;
                 
@@ -81,7 +87,7 @@ class Algorithm():
         avgZ = self.avg_graph(ZL);
         F = self.upd.solve_f(avgZ, c);
         
-        F = self.transformer.transform(F);
+        # F = self.transformer.transform(F);
         # F = self.upd.solve_fm(avgZ, c);
                 
         return WL,HL,ZL,avgZ,F;
@@ -159,6 +165,32 @@ class Algorithm():
 
         
         return WL,HL,ZL,GL,w0,S,F;
+    
+    
+    
+    def normalize_wh(self,W,H): # U > W ;; V >H , k x 100
+        #  norms = sqrt(sum(V.^2,1)); % 
+        #  norms = max(norms,1e-10);
+        #   V = V./repmat(norms,nSmp,1);
+        #   U = U.*repmat(norms,mFea,1);
+        
+        # tile(a, (m, n)).
+        nFea = W.shape[0];
+        nSmp = H.shape[1];
+        
+        # W = np.square(W);
+        H = np.square(H.T);
+        
+        norms = np.sum(np.abs(H),0);
+        #norms = np.sqrt(np.sum( W ,0)); # k
+        norms = np.maximum(norms,1e-10);
+        
+        NH = H/np.tile(norms,(nSmp,1));
+        
+        NW = W*np.tile(norms,(nFea,1));
+        
+        return NW,NH.T;
+    
     
     def calculate_ratio_of_s(self,S_old,S_new):
         diff = (S_new-S_old);
