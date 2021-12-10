@@ -75,6 +75,7 @@ class Update():
         to_inv =  np.dot(H.T,H);
         inv = np.linalg.inv(to_inv);
         return np.dot(inv, (np.dot(H.T,H)-gamma));
+    
         
     def update_s(self,w0,lambdas,beta,ZL,F,S): 
         # Z = [Z1,Z2,...]; list of all Z in multi-view 
