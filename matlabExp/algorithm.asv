@@ -1,4 +1,4 @@
-function [HF,WF,objhistory]=algorithm(X,H,Z,invH,num_view,max_iter)
+function [HF,WF,Z,F,S]=algorithm(X,H,Z,G,invH,num_view,truthF,gamma,max_iter)
 % X = list of all view {x1,x2,x3,...}
 % W = list of all w {w1,w2,w3,...}
 % H = list of all h {h1,h2,h3,...}
@@ -35,8 +35,16 @@ for iter = 1:max_iter
     % --------- update Z ----------------
 
     for iv = 1:num_view
-        Z{iv} = Z{iv}.*getCoeH(X{iv},W,H,Z);
-        
+        % Z{iv} = Z{iv}.*getCoeZ(HF{iv},Z{iv});
+        %         I = np.eye(H.shape[1]);
+        %         to_inv = (np.dot(H.T,H) + gamma*I);
+        %         inv = np.linalg.inv(to_inv);
+        %         return np.dot(inv,np.dot(H.T,H));
+        dim = size(HF{iv});
+        I = eye(dim(2));
+        to_inv = HF{iv}'*HF{iv}+gamma*I;
+        invV = inv(to_inv);
+        Z{iv} = invV*(HF{iv}'*HF{iv});
     end
     
 %     for iv = 1:num_view
@@ -44,10 +52,16 @@ for iter = 1:max_iter
 %         %fprintf('Error of %i view is %i \n',iv,e);
 %     end
     
-%     objhistory = CalculateObj(X{1}, WF{1}, HF{1}');  
+    % objhistory = CalculateObj(X{1}, WF{1}, HF{1}');  
     % disp(objhistory);
     
-    end
+end
+% complete graph
+for iv=1:num_view
+    Z{iv} = G{iv}'*Z{iv}*G{iv};
+end
+% graph fusion 
+[F,S]= graphfusion(Z,truthF,100,0.01);
     
 end
 
